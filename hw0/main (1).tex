@@ -1,0 +1,75 @@
+\documentclass{article} 
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor} 
+\usepackage{graphicx} 
+\usepackage{hyperref} 
+\usepackage{tikzsymbols}
+\usepackage[style=numeric, backend=biber]{biblatex}
+\addbibresource{sample.bib}
+
+\newcommand{\important}[1]{\textcolor{red}{\textbf{#1}}}
+
+\title{My First LaTeX Paper}
+\author{Yonatan Karni, Raz Ziv, Fooad khalaila} 
+\date{May 2, 2026}
+
+\begin{document} 
+
+\maketitle
+
+\section{Introduction}
+First time using \important{LaTeX}... really \Smiley[1.5][yellow] \newline Some of us used google docs equations, so trying LaTex now is kinda nice. \newline Here's a link to \href{https://www.overleaf.com}{Overleaf}, an online LaTeX editor.
+
+\subsection{What is NLP?}
+Natural Language Processing (NLP) is a branch of artificial intelligence that enables computers to understand, interpret, and generate human language, both text and speech 
+\subsection{NLP applications} 
+There are many ways NLP is used to perform tasks in the real world:
+\begin{itemize} 
+    \item Large Language Models
+    \item Question answering
+    \item Content creation
+    \item Image generation
+    \item Video generation
+    \item Code generation
+    \item Math problem solving
+\end{itemize}
+And much more.
+
+\section{Main Content} 
+Figure \ref{fig:frog}, is of Dat Boi, an Internet meme \cite{DatBoi-Wikipedia}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.3\textwidth]{DatBoi.jpg} 
+    \caption{Here come dat boi!} 
+    \label{fig:frog}
+\end{figure}
+
+\subsection{Math and Tables}
+The quadratic formula is written as:
+\begin{equation}
+    x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+\end{equation}
+Below is Table \ref{tab:example}, which shows some random data. \newline
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        Category & Value A & Value B \\ \hline
+        Test 1 & 10 & 20 \\ \hline
+        Test 2 & 30 & 40 \\ \hline
+    \end{tabular}
+    \caption{Random 2x3 Table}
+    \label{tab:example}
+\end{table}
+
+\section{Rules of Fight Club}
+\begin{enumerate}
+    \item First rule of Fight Club is: You do not talk about Fight Club.
+    \item Second rule of Fight Club is: YOU DO NOT TALK ABOUT FIGHT CLUB.
+\end{enumerate}
+
+\printbibliography
+
+\end{document}

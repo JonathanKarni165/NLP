@@ -1,0 +1,262 @@
+#LyX 2.5 created this file. For more info see https://www.lyx.org/
+\lyxformat 643
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{algorithm2e}
+\usepackage{binarytree}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{amsmath}
+\DeclareMathOperator{\sgn}{sgn}
+\newcommand{\lcm}[1]{\operatorname{lcm}\left(#1\right)}
+\end_preamble
+\use_default_options true
+\begin_modules
+theorems-ams
+eqs-within-sections
+figs-within-sections
+\end_modules
+\maintain_unincluded_children no
+\language english
+\language_package default
+\inputencoding cp862
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification default
+\crossref_package refstyle
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\backgroundcolor none
+\fontcolor none
+\notefontcolor lightgray
+\boxbgcolor red
+\table_border_color default
+\table_odd_row_color default
+\table_even_row_color default
+\table_alt_row_colors_start 1
+\index Index
+\shortcut idx
+\color #008080
+\end_index
+\leftmargin 10text%
+\topmargin 7text%
+\rightmargin 10text%
+\bottommargin 10text%
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes true
+\change_bars false
+\postpone_fragile_content true
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\docbook_mathml_version 0
+\end_header
+
+\begin_body
+
+\begin_layout Title
+NLP Assignment 0
+\end_layout
+
+\begin_layout Author
+Yonatan Karni,
+ Raz Ziv,
+ Fooad khalaila 
+\end_layout
+
+\begin_layout Section*
+4.
+\end_layout
+
+\begin_layout Subsection*
+a.
+\end_layout
+
+\begin_layout Standard
+We claim that the output of the model is always greater or equal 
+\begin_inset Formula $0.5$
+\end_inset
+
+,
+ Therefore every sample will get a positive label and for the given dataset the maximal accuracy will be 
+\begin_inset Formula $\frac{1}{5}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+p\left(\textnormal{paraphrase}|x_{1},x_{2}\right) & =\sigma\left(\textnormal{relu}\left(x_{1}\right)^{\top}\textnormal{relu}\left(x_{1}\right)\right)=\sigma\left(\sum^{d}_{k=1}\max\left(0,x_{1,k}\right)\cdot\max\left(0,x_{2,k}\right)\right)\\
+ & \overset{*}{\ge}\sigma\left(\sum^{d}_{k=1}0\cdot0\right)=0.5
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+* is derived from 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ monotonicity and sum of non-negative parts.
+\end_layout
+
+\begin_layout Subsection*
+b.
+\end_layout
+
+\begin_layout Standard
+By removing the 
+\begin_inset Formula $\textnormal{relu}$
+\end_inset
+
+ function we can get a negative input to 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ and therefore a negative result.
+ We will choose the new classifier:
+\end_layout
+
+\begin_layout Subsection*
+\begin_inset Formula 
+\[
+p\left(\textnormal{paraphrase}|x_{1},x_{2}\right)=\sigma\left(x^{\top}_{2}x_{1}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+c.
+\end_layout
+
+\begin_layout Standard
+I will go over each choice and explain why i chose/ignored it.
+\end_layout
+
+\begin_layout Standard
+-Accuracy,
+ is actually bad in our situation,
+ For example a classifier which always predicts false will achieve 
+\begin_inset Formula $80\%$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+-Precision,
+ is greatly affected from the imbalance in the dataset,
+ because it uses the negative samples for normalization.
+\end_layout
+
+\begin_layout Standard
+-Recall,
+ is a good choice because it is not affected by the imbalance in the dataset,
+ it only compares sizes within the positive samples.
+\end_layout
+
+\begin_layout Standard
+-ROC-AUC,
+ is excellent choice for evaluating the model ability to separate classes while not being affected from the imbalance.
+\end_layout
+
+\begin_layout Standard
+-AUC-PR,
+ is using precision as one of it's axis and therefore strongly shifted by the imbalance.
+\end_layout
+
+\begin_layout Standard
+-Confusion Matrix,
+ is also a good choice as it gives us a general idea of the model performance on the dataset but we should not forget the imbalance when interpreting it.
+\end_layout
+
+\begin_layout Section*
+AI Disclosure
+\end_layout
+
+\begin_layout Standard
+We have used Chat-GPT for understanding Google Colab platform,
+ some ML basic ideas recap and for explaining different metrics for evaluating a model (also some Youtube videos about ROC).
+\end_layout
+
+\begin_layout Standard
+We have also used Gemini inside Google Colab notebook for some help on the numpy and matplotlib syntax.
+\end_layout
+
+\begin_layout Standard
+We used the AI in a moderate way which allowed us to boost productivity while still learning effectively.
+\end_layout
+
+\end_body
+\end_document
