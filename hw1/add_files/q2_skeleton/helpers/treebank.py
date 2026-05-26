@@ -52,7 +52,7 @@ class StanfordSentiment:
             return self._sentences
 
         sentences = []
-        with open(join(self.path,"datasetSentences.txt"), "r") as f:
+        with open('/Users/user/Desktop/לימודים/homwork/NLP/hw1/add_files/q2_skeleton/helpers/datasets/stanfordSentimentTreebank/datasetSentences.txt', "r") as f:
             first = True
             for line in f:
                 if first:

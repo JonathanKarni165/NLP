@@ -1,0 +1,252 @@
+%% LyX 2.5.1 created this file.  For more info, see https://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[cp862]{inputenc}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{geometry}
+\geometry{verbose,tmargin=0.07\textwidth,bmargin=0.1\textwidth,lmargin=0.1\textwidth,rmargin=0.1\textwidth}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\providecolor{lyxadded}{rgb}{0,0,1}
+\providecolor{lyxdeleted}{rgb}{1,0,0}
+%% Change tracking with ulem and xcolor: base macros
+\DeclareRobustCommand{\mklyxadded}[1]{\textcolor{lyxadded}\bgroup#1\egroup}
+\DeclareRobustCommand{\mklyxdeleted}[1]{\textcolor{lyxdeleted}\bgroup\mklyxsout{#1}\egroup}
+\DeclareRobustCommand{\mklyxsout}[1]{\ifx\\#1\else\sout{#1}\fi}
+%% Change tracking with ulem and xcolor: ct markup
+\DeclareRobustCommand{\lyxadded}[4][]{\mklyxadded{#4}}
+\DeclareRobustCommand{\lyxdeleted}[4][]{\mklyxdeleted{#4}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usepackage{algorithm2e}
+\usepackage{binarytree}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{amsmath}
+\DeclareMathOperator{\sgn}{sgn}
+\newcommand{\lcm}[1]{\operatorname{lcm}\left(#1\right)}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+\title{NLP-Assignment 1}
+\author{Yonatan Karni | Raz Ziv}
+\maketitle
+
+\section*{3.}
+
+\subsection*{a.}
+
+Firstly we notice that for fixed $o,c$ the number of times $p_{\theta}\left(o|c\right)$
+shows in the objective is $\#\left(c,o\right)$,
+
+This follows from the fact that in each window where both $o,c$ is
+in we count $p_{\theta}\left(o|c\right)$ one more time.
+
+\[
+\mathcal{L}\left(p_{\theta}\left(c|o\right)\right)=\#\left(c,o\right)\log\left(p_{\theta}\left(o|c\right)\right)
+\]
+
+Then we can rewrite the objective as:
+
+\[
+\mathcal{L}\left(\theta\right)=\sum^{T}_{t}\sum_{-m\le j\le m}\log\left(p_{\theta}\left(o|c\right)\right)=\sum_{c\in Voc}\sum_{o\in Voc}\#\left(c,o\right)\log\left(p_{\theta}\left(o|c\right)\right)=\sum_{c\in Voc}\sum_{o\in Voc}\mathcal{L}\left(p_{\theta}\left(c|o\right)\right)
+\]
+
+For a fixed $o,c$ we must make sure $\sum_{o'\in Voc}p_{\theta}\left(o'|c\right)=1$
+namely $\theta$ is a probability distribution.
+
+Therefore we will use Lagrange multiplier with $\lambda$ parameter
+to enforce this constraint.
+
+Moreover, we can see that maximizing the original objective $\mathcal{L}$
+is equivalent to maximize each term in the sum over the words $o,c$. 
+
+\begin{align*}
+\theta^{*} & =\arg\max_{\theta}\mathcal{L}\left(\theta\right)\\
+\iff & \forall\left(c,o\right)\ p_{\theta^{*}}\left(o|c\right)=\arg\max_{p_{\theta}\left(c|o\right)}\mathcal{L}\left(p_{\theta}\left(c|o\right),\lambda\right)\\
+s.t\ \mathcal{L}\left(p_{\theta}\left(c|o\right),\lambda\right)= & \left(\#\left(c,o\right)\right)\log\left(p_{\theta}\left(o|c\right)\right)+\lambda\left(1-\sum_{o'\in Voc}p_{\theta}\left(o'|c\right)\right)
+\end{align*}
+
+Differentiating by $p_{\theta}\left(o|c\right)$ and comparing to
+$0$ we get:
+
+\begin{align*}
+\frac{\partial\mathcal{L}\left(p_{\theta}\left(c|o\right),\lambda\right)}{\partial p_{\theta}\left(c|o\right)} & =\frac{\#\left(c,o\right)}{p_{\theta^{*}}\left(o|c\right)}-\lambda=0\\
+p_{\theta^{*}}\left(o|c\right) & =\frac{\#\left(c,o\right)}{\lambda}
+\end{align*}
+
+Now substitute back into the original Lagrange multiplier definition:
+
+\begin{align*}
+\sum_{o'\in Voc}p_{\theta^{*}}\left(o'|c\right) & =\sum_{o'\in Voc}\frac{\#\left(c,o'\right)}{\lambda}=1\\
+\lambda & =\sum_{o'\in Voc}\#\left(c,o'\right)
+\end{align*}
+
+Finally we obtain:
+
+\[
+p_{\theta^{*}}\left(o|c\right)=\frac{\#\left(c,o\right)}{\sum_{o'\in Voc}\#\left(c,o'\right)}
+\]
+
+
+\subsection*{b.}
+
+We will take the following corpus $\left\{ abc,cbc,aac\right\} $
+over the alphabet $\left\{ a,b,c\right\} $
+
+Using a window of size 3 for skip-gram model.
+
+Let us assume $p$ is optimal while being expressed with the given
+softmax expression.
+
+Lets calculate the optimal probabilities using the optimal form we
+found in last section:
+
+\begin{align*}
+p\left(a|c\right) & =\frac{3}{8},\ p\left(a|a\right)=\frac{2}{6}\\
+p\left(b|c\right) & =\frac{3}{8},\ p\left(b|a\right)=\frac{1}{6}\\
+p\left(c|c\right) & =\frac{2}{8},\ p\left(c|a\right)=\frac{3}{6}
+\end{align*}
+
+Now we can obtain the following on the embedding of $v_{c},v_{a}$
+:
+
+\begin{align*}
+\log\left(\frac{p\left(a|c\right)}{p\left(c|c\right)}\right) & =\log\left(\frac{e^{u_{a}v_{c}}}{e^{u_{c}v_{c}}}\right)=v_{c}\left(u_{a}-u_{c}\right)=\log\left(\frac{3}{2}\right)\\
+\log\left(\frac{p\left(a|a\right)}{p\left(c|a\right)}\right) & =\log\left(\frac{e^{u_{a}v_{a}}}{e^{u_{c}v_{a}}}\right)=v_{a}\left(u_{a}-u_{c}\right)=\log\left(\frac{2}{3}\right)\\
+\iff & \frac{v_{c}}{v_{a}}=\frac{\log\left(\frac{3}{2}\right)}{\log\left(\frac{2}{3}\right)}
+\end{align*}
+
+On the other hand:
+
+\begin{align*}
+\log\left(\frac{p\left(b|c\right)}{p\left(c|c\right)}\right) & =\log\left(\frac{e^{u_{b}v_{c}}}{e^{u_{c}v_{c}}}\right)=v_{c}\left(u_{b}-u_{c}\right)=\log\left(\frac{3}{2}\right)\\
+\log\left(\frac{p\left(b|a\right)}{p\left(c|a\right)}\right) & =\log\left(\frac{e^{u_{b}v_{a}}}{e^{u_{c}v_{a}}}\right)=v_{a}\left(u_{b}-u_{c}\right)=\log\left(\frac{1}{3}\right)\\
+\iff & \frac{v_{c}}{v_{a}}=\frac{\log\left(\frac{3}{2}\right)}{\log\left(\frac{1}{3}\right)}
+\end{align*}
+
+From both we get the following contradiction:
+
+\[
+\frac{\log\left(\frac{3}{2}\right)}{\log\left(\frac{2}{3}\right)}=\frac{\log\left(\frac{3}{2}\right)}{\log\left(\frac{1}{3}\right)}\iff\log\left(3\right)=\log\left(2\right)
+\]
+
+\pagebreak
+
+\section*{5.}
+
+\subsection*{5.1.a.}
+
+I will discuss two intrinsic evaluation metrics:
+
+\textbf{Coherence-}
+
+measure how much a certain topic is coherent.
+
+Namely, how much top words that belong to the topic are likely to
+be seen near each other in the corpus.
+
+For example, given the following words inside a topic:
+
+``surf sea wave shore'' will give higher coherence then ``surf
+champion banana car''
+
+simply because the first words are more likely to appear in the same
+context.\\
+
+The mathematical expression for the coherence:
+
+First we will choose some top matching words $W$ for a certain topic
+$T$.
+
+Denote $P\left(w\right)$ the probability to get the word $w$ from
+some context, and $P\left(u,w\right)$ is the joint distribution ,
+ie to see both words in the same context.
+
+\begin{align*}
+\text{Coherence}\left(T\right) & =\frac{1}{\left|W\right|}\sum_{\left(w,u\right)\in W}\log\left(\frac{P\left(w,u\right)}{P\left(w\right)P\left(u\right)}\right)\\
+\text{Coherence} & =\frac{1}{K}\sum^{K}_{i=1}\text{Coherence}\left(T_{i}\right)
+\end{align*}
+
+\textbf{Diversity-}
+
+The diversity metric aims to measure how much the topics differ.
+
+We measure how likely that a word will appear in both topics in the
+following method:
+
+Choose $W_{k}$ set of most likely words for each topic.
+
+Assume $K$ topics and $N$ top words per topic.
+
+\[
+\textnormal{Diversity}=\frac{\left|\bigcup^{K}_{k=1}W_{k}\right|}{K\cdot N}
+\]
+
+
+\subsection*{5.1.b.}
+
+I saw several topic models use wikipedia as a benchmark dataset for
+evaluation. 
+
+20 Newsgroup, a large dataset contains news posts on 20 topics is
+used in different research papers.
+
+Trump's Twitter messages archive was used in BERTopic evaluation git
+repository.
+
+\subsection*{5.3.}
+
+I used the two coherence parameters $c\_v$ and $c\_uci$.
+
+Both parameters use a sliding window to check if some words appear
+together, $c\_v$ is more sophisticated with additional statistical
+methods and different normalization.
+
+I got the following results:
+
+\begin{align*}
+c\_v & =0.41\\
+c\_uci & =-5.97
+\end{align*}
+
+The first parameter range $0\le c\_v\le1$ where $0$ means no coherence
+at all and $1$ means very strong coherence. We got $0.41$ so we
+can see a coherence was detected but not that high, probably due to
+real world messy text data or not enough data.
+
+The second parameter $c\_uci\in\mathbb{R}$ however most of times
+it falls approximately in $[-15,5]$.
+
+It shows a medium coherence measure which probably results from its
+strict window of length $10$, some words appear for example in the
+next sentence.
+
+\subsection*{5.4}
+
+One problem is semantics, namely the literal meaning of words. The
+two evaluation parameters I have shown earlier can fail on this regard. 
+
+For example a topic may contain top words which are written close
+to each other many times and therefore produce high coherence, but
+the words are very different semantically. \\
+
+Another example is a model with very low diversity which may seem
+bad. But a human may recognize a lot of topics being merged together
+in the corpus, for example science of music. 
+\end{document}

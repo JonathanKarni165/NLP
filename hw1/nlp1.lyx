@@ -1,0 +1,689 @@
+#LyX 2.5 created this file. For more info see https://www.lyx.org/
+\lyxformat 643
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{algorithm2e}
+\usepackage{binarytree}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{amsmath}
+\DeclareMathOperator{\sgn}{sgn}
+\newcommand{\lcm}[1]{\operatorname{lcm}\left(#1\right)}
+\end_preamble
+\use_default_options true
+\begin_modules
+theorems-ams
+eqs-within-sections
+figs-within-sections
+\end_modules
+\maintain_unincluded_children no
+\language english
+\language_package default
+\inputencoding cp862
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification default
+\crossref_package refstyle
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\backgroundcolor none
+\fontcolor none
+\notefontcolor lightgray
+\boxbgcolor red
+\table_border_color default
+\table_odd_row_color default
+\table_even_row_color default
+\table_alt_row_colors_start 1
+\index Index
+\shortcut idx
+\color #008080
+\end_index
+\leftmargin 10text%
+\topmargin 7text%
+\rightmargin 10text%
+\bottommargin 10text%
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes true
+\change_bars false
+\postpone_fragile_content true
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\docbook_mathml_version 0
+\end_header
+
+\begin_body
+
+\begin_layout Title
+NLP-Assignment 1
+\end_layout
+
+\begin_layout Author
+Yonatan Karni | Raz Ziv
+\end_layout
+
+\begin_layout Section*
+3.
+\end_layout
+
+\begin_layout Subsection*
+a.
+\end_layout
+
+\begin_layout Standard
+Firstly we notice that for fixed 
+\begin_inset Formula $o,c$
+\end_inset
+
+ the number of times 
+\begin_inset Formula $p_{\theta}\left(o|c\right)$
+\end_inset
+
+ shows in the objective is 
+\begin_inset Formula $\#\left(c,o\right)$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+This follows from the fact that in each window where both 
+\begin_inset Formula $o,c$
+\end_inset
+
+ is in we count 
+\begin_inset Formula $p_{\theta}\left(o|c\right)$
+\end_inset
+
+ one more time.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathcal{L}\left(p_{\theta}\left(c|o\right)\right)=\#\left(c,o\right)\log\left(p_{\theta}\left(o|c\right)\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then we can rewrite the objective as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathcal{L}\left(\theta\right)=\sum^{T}_{t}\sum_{-m\le j\le m}\log\left(p_{\theta}\left(o|c\right)\right)=\sum_{c\in Voc}\sum_{o\in Voc}\#\left(c,o\right)\log\left(p_{\theta}\left(o|c\right)\right)=\sum_{c\in Voc}\sum_{o\in Voc}\mathcal{L}\left(p_{\theta}\left(c|o\right)\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For a fixed 
+\begin_inset Formula $o,c$
+\end_inset
+
+ we must make sure 
+\begin_inset Formula $\sum_{o'\in Voc}p_{\theta}\left(o'|c\right)=1$
+\end_inset
+
+ namely 
+\begin_inset Formula $\theta$
+\end_inset
+
+ is a probability distribution.
+\end_layout
+
+\begin_layout Standard
+Therefore we will use Lagrange multiplier with 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ parameter to enforce this constraint.
+\end_layout
+
+\begin_layout Standard
+Moreover,
+ we can see that maximizing the original objective 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+ is equivalent to maximize each term in the sum over the words 
+\begin_inset Formula $o,c$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\theta^{*} & =\arg\max_{\theta}\mathcal{L}\left(\theta\right)\\
+\iff & \forall\left(c,o\right)\ p_{\theta^{*}}\left(o|c\right)=\arg\max_{p_{\theta}\left(c|o\right)}\mathcal{L}\left(p_{\theta}\left(c|o\right),\lambda\right)\\
+s.t\ \mathcal{L}\left(p_{\theta}\left(c|o\right),\lambda\right)= & \left(\#\left(c,o\right)\right)\log\left(p_{\theta}\left(o|c\right)\right)+\lambda\left(1-\sum_{o'\in Voc}p_{\theta}\left(o'|c\right)\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Differentiating by 
+\begin_inset Formula $p_{\theta}\left(o|c\right)$
+\end_inset
+
+ and comparing to 
+\begin_inset Formula $0$
+\end_inset
+
+ we get:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\frac{\partial\mathcal{L}\left(p_{\theta}\left(c|o\right),\lambda\right)}{\partial p_{\theta}\left(c|o\right)} & =\frac{\#\left(c,o\right)}{p_{\theta^{*}}\left(o|c\right)}-\lambda=0\\
+p_{\theta^{*}}\left(o|c\right) & =\frac{\#\left(c,o\right)}{\lambda}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now substitute back into the original Lagrange multiplier definition:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\sum_{o'\in Voc}p_{\theta^{*}}\left(o'|c\right) & =\sum_{o'\in Voc}\frac{\#\left(c,o'\right)}{\lambda}=1\\
+\lambda & =\sum_{o'\in Voc}\#\left(c,o'\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally we obtain:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+p_{\theta^{*}}\left(o|c\right)=\frac{\#\left(c,o\right)}{\sum_{o'\in Voc}\#\left(c,o'\right)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+b.
+\end_layout
+
+\begin_layout Standard
+We will take the following corpus 
+\begin_inset Formula $\left\{ abc,cbc,aac\right\} $
+\end_inset
+
+ over the alphabet 
+\begin_inset Formula $\left\{ a,b,c\right\} $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using a window of size 3 for skip-gram model.
+\end_layout
+
+\begin_layout Standard
+Let us assume 
+\begin_inset Formula $p$
+\end_inset
+
+ is optimal while being expressed with the given softmax expression.
+\end_layout
+
+\begin_layout Standard
+Lets calculate the optimal probabilities using the optimal form we found in last section:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+p\left(a|c\right) & =\frac{3}{8},\ p\left(a|a\right)=\frac{2}{6}\\
+p\left(b|c\right) & =\frac{3}{8},\ p\left(b|a\right)=\frac{1}{6}\\
+p\left(c|c\right) & =\frac{2}{8},\ p\left(c|a\right)=\frac{3}{6}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now we can obtain the following on the embedding of 
+\begin_inset Formula $v_{c},v_{a}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\log\left(\frac{p\left(a|c\right)}{p\left(c|c\right)}\right) & =\log\left(\frac{e^{u_{a}v_{c}}}{e^{u_{c}v_{c}}}\right)=v_{c}\left(u_{a}-u_{c}\right)=\log\left(\frac{3}{2}\right)\\
+\log\left(\frac{p\left(a|a\right)}{p\left(c|a\right)}\right) & =\log\left(\frac{e^{u_{a}v_{a}}}{e^{u_{c}v_{a}}}\right)=v_{a}\left(u_{a}-u_{c}\right)=\log\left(\frac{2}{3}\right)\\
+\iff & \frac{v_{c}}{v_{a}}=\frac{\log\left(\frac{3}{2}\right)}{\log\left(\frac{2}{3}\right)}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+On the other hand:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\log\left(\frac{p\left(b|c\right)}{p\left(c|c\right)}\right) & =\log\left(\frac{e^{u_{b}v_{c}}}{e^{u_{c}v_{c}}}\right)=v_{c}\left(u_{b}-u_{c}\right)=\log\left(\frac{3}{2}\right)\\
+\log\left(\frac{p\left(b|a\right)}{p\left(c|a\right)}\right) & =\log\left(\frac{e^{u_{b}v_{a}}}{e^{u_{c}v_{a}}}\right)=v_{a}\left(u_{b}-u_{c}\right)=\log\left(\frac{1}{3}\right)\\
+\iff & \frac{v_{c}}{v_{a}}=\frac{\log\left(\frac{3}{2}\right)}{\log\left(\frac{1}{3}\right)}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From both we get the following contradiction:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\log\left(\frac{3}{2}\right)}{\log\left(\frac{2}{3}\right)}=\frac{\log\left(\frac{3}{2}\right)}{\log\left(\frac{1}{3}\right)}\iff\log\left(3\right)=\log\left(2\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\backslash
+pagebreak
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+5.
+\end_layout
+
+\begin_layout Subsection*
+5.1.a.
+\end_layout
+
+\begin_layout Standard
+I will discuss two intrinsic evaluation metrics:
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Coherence-
+\end_layout
+
+\begin_layout Standard
+measure how much a certain topic is coherent.
+\end_layout
+
+\begin_layout Standard
+Namely,
+ how much top words that belong to the topic are likely to be seen near each other in the corpus.
+\end_layout
+
+\begin_layout Standard
+For example,
+ given the following words inside a topic:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+surf sea wave shore
+\begin_inset Quotes erd
+\end_inset
+
+ will give higher coherence then 
+\begin_inset Quotes eld
+\end_inset
+
+surf champion banana car
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+simply because the first words are more likely to appear in the same context.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The mathematical expression for the coherence:
+\end_layout
+
+\begin_layout Standard
+First we will choose some top matching words 
+\begin_inset Formula $W$
+\end_inset
+
+ for a certain topic 
+\begin_inset Formula $T$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Denote 
+\begin_inset Formula $P\left(w\right)$
+\end_inset
+
+ the probability to get the word 
+\begin_inset Formula $w$
+\end_inset
+
+ from some context,
+ and 
+\begin_inset Formula $P\left(u,w\right)$
+\end_inset
+
+ is the joint distribution ,
+ ie to see both words in the same context.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\text{Coherence}\left(T\right) & =\frac{1}{\left|W\right|}\sum_{\left(w,u\right)\in W}\log\left(\frac{P\left(w,u\right)}{P\left(w\right)P\left(u\right)}\right)\\
+\text{Coherence} & =\frac{1}{K}\sum^{K}_{i=1}\text{Coherence}\left(T_{i}\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Diversity-
+\end_layout
+
+\begin_layout Standard
+The diversity metric aims to measure how much the topics differ.
+\end_layout
+
+\begin_layout Standard
+We measure how likely that a word will appear in both topics in the following method:
+\end_layout
+
+\begin_layout Standard
+Choose 
+\begin_inset Formula $W_{k}$
+\end_inset
+
+ set of most likely words for each topic.
+\end_layout
+
+\begin_layout Standard
+Assume 
+\begin_inset Formula $K$
+\end_inset
+
+ topics and 
+\begin_inset Formula $N$
+\end_inset
+
+ top words per topic.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\textnormal{Diversity}=\frac{\left|\bigcup^{K}_{k=1}W_{k}\right|}{K\cdot N}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+5.1.b.
+\end_layout
+
+\begin_layout Standard
+I saw several topic models use wikipedia as a benchmark dataset for evaluation.
+ 
+\end_layout
+
+\begin_layout Standard
+20 Newsgroup,
+ a large dataset contains news posts on 20 topics is used in different research papers.
+\end_layout
+
+\begin_layout Standard
+Trump's Twitter messages archive was used in BERTopic evaluation git repository.
+\end_layout
+
+\begin_layout Subsection*
+5.3.
+\end_layout
+
+\begin_layout Standard
+I used the two coherence parameters 
+\begin_inset Formula $c\_v$
+\end_inset
+
+ and 
+\begin_inset Formula $c\_uci$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Both parameters use a sliding window to check if some words appear together,
+ 
+\begin_inset Formula $c\_v$
+\end_inset
+
+ is more sophisticated with additional statistical methods and different normalization.
+\end_layout
+
+\begin_layout Standard
+I got the following results:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+c\_v & =0.41\\
+c\_uci & =-5.97
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The first parameter range 
+\begin_inset Formula $0\le c\_v\le1$
+\end_inset
+
+ where 
+\begin_inset Formula $0$
+\end_inset
+
+ means no coherence at all and 
+\begin_inset Formula $1$
+\end_inset
+
+ means very strong coherence.
+ We got 
+\begin_inset Formula $0.41$
+\end_inset
+
+ so we can see a coherence was detected but not that high,
+ probably due to real world messy text data or not enough data.
+\end_layout
+
+\begin_layout Standard
+The second parameter 
+\begin_inset Formula $c\_uci\in\mathbb{R}$
+\end_inset
+
+ however most of times it falls approximately in 
+\begin_inset Formula $[-15,5]$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+It shows a medium coherence measure which probably results from its strict window of length 
+\begin_inset Formula $10$
+\end_inset
+
+,
+ some words appear for example in the next sentence.
+\end_layout
+
+\begin_layout Subsection*
+5.4
+\end_layout
+
+\begin_layout Standard
+One problem is semantics,
+ namely the literal meaning of words.
+ The two evaluation parameters I have shown earlier can fail on this regard.
+ 
+\end_layout
+
+\begin_layout Standard
+For example a topic may contain top words which are written close to each other many times and therefore produce high coherence,
+ but the words are very different semantically.
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Another example is a model with very low diversity which may seem bad.
+ But a human may recognize a lot of topics being merged together in the corpus,
+ for example science of music.
+ 
+\end_layout
+
+\end_body
+\end_document

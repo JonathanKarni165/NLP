@@ -1,0 +1,262 @@
+#LyX 2.5 created this file. For more info see https://www.lyx.org/
+\lyxformat 643
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{algorithm2e}
+\usepackage{binarytree}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{amsmath}
+\DeclareMathOperator{\sgn}{sgn}
+\newcommand{\lcm}[1]{\operatorname{lcm}\left(#1\right)}
+\end_preamble
+\use_default_options true
+\begin_modules
+theorems-ams
+eqs-within-sections
+figs-within-sections
+\end_modules
+\maintain_unincluded_children no
+\language english
+\language_package default
+\inputencoding cp862
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification default
+\crossref_package refstyle
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\backgroundcolor none
+\fontcolor none
+\notefontcolor lightgray
+\boxbgcolor red
+\table_border_color default
+\table_odd_row_color default
+\table_even_row_color default
+\table_alt_row_colors_start 1
+\index Index
+\shortcut idx
+\color #008080
+\end_index
+\leftmargin 10text%
+\topmargin 7text%
+\rightmargin 10text%
+\bottommargin 10text%
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes true
+\change_bars false
+\postpone_fragile_content true
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\docbook_mathml_version 0
+\end_header
+
+\begin_body
+
+\begin_layout Title
+NLP-Assignment 1
+\end_layout
+
+\begin_layout Author
+yonatan karni
+\end_layout
+
+\begin_layout Section*
+3.
+\end_layout
+
+\begin_layout Subsection*
+a.
+\end_layout
+
+\begin_layout Standard
+Firstly we notice that for fixed 
+\begin_inset Formula $o,c$
+\end_inset
+
+ the number of times 
+\begin_inset Formula $p_{\theta}\left(o|c\right)$
+\end_inset
+
+ shows in the objective is 
+\begin_inset Formula $\#\left(c,o\right)$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+This follows from the fact that in each window where both 
+\begin_inset Formula $o,c$
+\end_inset
+
+ is in we count 
+\begin_inset Formula $p_{\theta}\left(o|c\right)$
+\end_inset
+
+ one more time.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathcal{L}\left(\left(c,o\right),\theta\right)=\#\left(c,o\right)\log\left(p_{\theta}\left(o|c\right)\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For a fixed 
+\begin_inset Formula $o,c$
+\end_inset
+
+ we must make sure 
+\begin_inset Formula $\sum_{o'\in Voc}p_{\theta}\left(o'|c\right)=1$
+\end_inset
+
+ namely 
+\begin_inset Formula $\theta$
+\end_inset
+
+ is a probability distribution.
+\end_layout
+
+\begin_layout Standard
+Therefore we will use Lagrange multiplier with 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ parameter to enforce this constraint.
+\end_layout
+
+\begin_layout Standard
+We want to find the following 
+\begin_inset Formula $\theta^{*}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\theta^{*}=\arg\max_{\theta}\mathcal{L}\left(\theta\right)=\arg\max_{\theta}\mathcal{L}\left(\left(c,o\right),\lambda,\theta\right)=\#\left(c,o\right)\log\left(p_{\theta}\left(o|c\right)\right)+\lambda-\lambda\sum_{o'\in Voc}p_{\theta}\left(o|c\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Differentiating by 
+\begin_inset Formula $p_{\theta}\left(o|c\right)$
+\end_inset
+
+ and comparing to 
+\begin_inset Formula $0$
+\end_inset
+
+ we get:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\frac{d\mathcal{L}\left(\mathcal{L}\left(\left(c,o\right),\lambda,\theta\right)\right)}{dp} & =\frac{\#\left(c,o\right)}{p_{\theta}\left(o|c\right)}-\lambda=0\\
+p_{\theta}\left(o|c\right) & =\frac{\#\left(c,o\right)}{\lambda}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now substitute back into the original Lagrange multiplier definition:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\sum_{o'\in Voc}p_{\theta}\left(o'|c\right) & =\sum_{o'\in Voc}\frac{\#\left(c,o'\right)}{\lambda}=1\\
+\lambda & =\sum_{o'\in Voc}\#\left(c,o'\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_body
+\end_document
