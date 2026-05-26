@@ -39,10 +39,21 @@ def naive_softmax_loss_and_gradient(
     """
 
     ### YOUR CODE HERE
-    raise NotImplementedError
+    u_w_dot_v_c = np.dot(outside_vectors, center_word_vec) # (u_w)^T * v_c
+    y_hat = softmax(u_w_dot_v_c)
+    loss = -np.log(y_hat[outside_word_idx]) # Cross-Entropy Loss
+
+    # Treat y_hat as error
+    y_hat[outside_word_idx] -= 1
+
+    # Grad calculation
+    grad_center_vec = np.dot(y_hat, outside_vectors)
+    grad_outside_vecs = np.outer(y_hat, center_word_vec)
     ### END YOUR CODE
 
     return loss, grad_center_vec, grad_outside_vecs
+    ### END YOUR CODE
+
 def neg_sampling_loss_and_gradient(
         center_word_vec,
         outside_word_idx,
@@ -170,24 +181,24 @@ def test_word2vec_basic():
     np.random.seed(9265)
     dummy_vectors = normalize_rows(np.random.randn(10, 3))
     dummy_tokens = dict([("a", 0), ("b", 1), ("c", 2), ("d", 3), ("e", 4)])
-    '''
+    
     print("==== Gradient check for skip-gram with naive_softmax_loss_and_gradient ====")
     gradcheck_naive(lambda vec: word2vec_sgd_wrapper(
         skipgram, dummy_tokens, vec, dataset, 5, naive_softmax_loss_and_gradient),
         dummy_vectors, "naive_softmax_loss_and_gradient Gradient")
 
-    '''
+    
     
     print("==== Gradient check for skip-gram with neg_sampling_loss_and_gradient ====")
     print(neg_sampling_loss_and_gradient(dummy_vectors[0], 1, dummy_vectors[5:], dataset, K=5)[0])
-    '''
+    
     gradcheck_naive(lambda vec: word2vec_sgd_wrapper(
         skipgram, dummy_tokens, vec, dataset, 5, neg_sampling_loss_and_gradient),
                     dummy_vectors, "neg_sampling_loss_and_gradient Gradient")
-    '''
+    
 
     print("\n=== Results ===")
-    '''
+    
     print("Skip-Gram with naive_softmax_loss_and_gradient")
 
     print("Your Result:")
@@ -212,7 +223,7 @@ Gradient wrt Outside Vectors (dJ/dU):
  [ 0.09472154 -0.04346509 -0.33062865]
  [-0.13638384  0.06258276  0.47605228]]
     """)
-    '''
+    
 
     print("Skip-Gram with neg_sampling_loss_and_gradient")
     print("Your Result:")

@@ -121,7 +121,7 @@ NLP-Assignment 1
 \end_layout
 
 \begin_layout Author
-yonatan karni
+Yonatan Karni | Raz Ziv
 \end_layout
 
 \begin_layout Section*
@@ -388,6 +388,143 @@ From both we get the following contradiction:
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\backslash
+pagebreak
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+4.
+\end_layout
+
+\begin_layout Subsection*
+a.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename photos4/Picture2.png
+	scale 40
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename photos4/pic1.jpeg
+	scale 20
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+b.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename photos4/Picture9.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\backslash
+pagebreak
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+c.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename photos4/Picture11.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Based on the graph from Part C,
+ the effect of diminishing returns can be observed immediately after the first and second hidden layers.
+ Adding one layer significantly boosts the accuracy from around 0.800 to nearly 0.838.
+ The accuracy reaches its peak at 2 hidden layers (approaching 0.840),
+ drops slightly at 3 layers,
+ and rises again a little at 4 layers.
+ These results are completely expected.
+\end_layout
+
+\begin_layout Standard
+A DAN model works by computing a simple average of the word embeddings,
+ meaning that the input to the network is a simple,
+ orderless representation of the text.
+ While adding one or two layers helps the network learn non-linear combinations of these averaged features,
+ adding too many layers (such as 3 or 4) to such a simple and orderless input often leads to overfitting or instability,
+ which explains why the performance stabilizes or decreases slightly.
+\end_layout
+
+\begin_layout Standard
+The linear model (0 hidden layers) did not achieve better performance than the 4-hidden-layer model.
+ The graph clearly shows that the model with 0 hidden layers had the lowest accuracy in the group (approximately 0.800),
+ while the 4-hidden-layer model reached an accuracy of about 0.839.
+\end_layout
+
+\begin_layout Subsection*
+d.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename photos4/Picture15.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The choice of activation function significantly affects the initial learning dynamics and the convergence speed of the network.
+ ReLU and GELU demonstrated very similar performance:
+ both immediately jumped to high accuracy (above 0.81) already in the first epoch,
+ while maintaining stability throughout the entire training process.
+\end_layout
+
+\begin_layout Standard
+Tanh,
+ on the other hand,
+ struggled at the beginning.
+ It started with a much lower accuracy of approximately 0.689 and experienced a sharp drop around epoch 4,
+ before eventually catching up with the other functions in the later stages of training.
 \end_layout
 
 \begin_layout Standard
@@ -683,6 +820,28 @@ Another example is a model with very low diversity which may seem bad.
  But a human may recognize a lot of topics being merged together in the corpus,
  for example science of music.
  
+\end_layout
+
+\begin_layout Section*
+6 AI Disclosure:
+\end_layout
+
+\begin_layout Subsection*
+Yonatan:
+\end_layout
+
+\begin_layout Standard
+I used mainly ChatGPT to understand topic modeling and also some help on understanding the goal further in section 3.
+ I feel like I could google about topic modeling and read from websites but the Chat helped me gain good intuition about my goal and gave a good review on the topic.
+ To sum up the AI helped me work quicker but I still managed to learn the details.
+\end_layout
+
+\begin_layout Subsection*
+Raz:
+\end_layout
+
+\begin_layout Standard
+
 \end_layout
 
 \end_body
