@@ -15,33 +15,31 @@ def naive_softmax_loss_and_gradient(
         outside_vectors,
         dataset
 ):
-    """ Naive Softmax loss & gradient function for word2vec models
-
-    Implement the naive softmax loss and gradients between a center word's 
-    embedding and an outside word's embedding. This will be the building block
-    for our word2vec models.
-
-    Arguments:
-    center_word_vec -- numpy ndarray, center word's embedding
-                    (v_c in the pdf handout)
-    outside_word_idx -- integer, the index of the outside word
-                    (o of u_o in the pdf handout)
-    outside_vectors -- outside vectors (rows of matrix) for all words in vocab
-                      (U in the pdf handout)
-    dataset -- needed for negative sampling, unused here.
-
-    Return:
-    loss -- naive softmax loss
-    grad_center_vec -- the gradient with respect to the center word vector
-                     (dJ / dv_c in the pdf handout)
-    grad_outside_vecs -- the gradient with respect to all the outside word vectors
-                    (dJ / dU)
-    """
-
-    ### YOUR CODE HERE
-    raise NotImplementedError
-    ### END YOUR CODE
-
+    """ Naive Softmax loss & gradient function for word2vec models """
+    
+    # 1. Compute the scores (dot product of center word and all outside vectors)
+    # outside_vectors is (V, D), center_word_vec is (D,) -> scores is (V,)
+    scores = np.dot(outside_vectors, center_word_vec)
+    
+    # 2. Apply softmax to get the predicted probabilities (y_hat)
+    y_hat = softmax(scores)
+    
+    # 3. Calculate the loss: J = -log(y_hat[actual_outside_word])
+    loss = -np.log(y_hat[outside_word_idx])
+    
+    # 4. Calculate the gradient with respect to the scores (y_hat - y)
+    # y is a one-hot vector where the true outside word is 1, rest are 0.
+    d_scores = y_hat.copy()
+    d_scores[outside_word_idx] -= 1.0
+    
+    # 5. Calculate gradient with respect to the center word vector (v_c)
+    # dJ / dv_c = U^T * (y_hat - y)
+    grad_center_vec = np.dot(outside_vectors.T, d_scores)
+    
+    # 6. Calculate gradient with respect to the outside word vectors (U)
+    # dJ / dU = (y_hat - y) * v_c^T  -> This is an outer product
+    grad_outside_vecs = np.outer(d_scores, center_word_vec)
+    
     return loss, grad_center_vec, grad_outside_vecs
 def neg_sampling_loss_and_gradient(
         center_word_vec,
@@ -170,24 +168,18 @@ def test_word2vec_basic():
     np.random.seed(9265)
     dummy_vectors = normalize_rows(np.random.randn(10, 3))
     dummy_tokens = dict([("a", 0), ("b", 1), ("c", 2), ("d", 3), ("e", 4)])
-    '''
     print("==== Gradient check for skip-gram with naive_softmax_loss_and_gradient ====")
     gradcheck_naive(lambda vec: word2vec_sgd_wrapper(
         skipgram, dummy_tokens, vec, dataset, 5, naive_softmax_loss_and_gradient),
         dummy_vectors, "naive_softmax_loss_and_gradient Gradient")
 
-    '''
     
     print("==== Gradient check for skip-gram with neg_sampling_loss_and_gradient ====")
-    print(neg_sampling_loss_and_gradient(dummy_vectors[0], 1, dummy_vectors[5:], dataset, K=5)[0])
-    '''
     gradcheck_naive(lambda vec: word2vec_sgd_wrapper(
         skipgram, dummy_tokens, vec, dataset, 5, neg_sampling_loss_and_gradient),
                     dummy_vectors, "neg_sampling_loss_and_gradient Gradient")
-    '''
 
     print("\n=== Results ===")
-    '''
     print("Skip-Gram with naive_softmax_loss_and_gradient")
 
     print("Your Result:")
@@ -212,7 +204,6 @@ Gradient wrt Outside Vectors (dJ/dU):
  [ 0.09472154 -0.04346509 -0.33062865]
  [-0.13638384  0.06258276  0.47605228]]
     """)
-    '''
 
     print("Skip-Gram with neg_sampling_loss_and_gradient")
     print("Your Result:")
